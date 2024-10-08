@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Методы платежа</title>
+</head>
+<body>
+<h1>Список методов:</h1>
+<form action="/kindPayment/add" method="post" th:object="${kindPayment}">
+  <input type="text" name="name" placeholder="Наименование" th:field="*{name}" required>
+
+  <button type="submit" formmethod="post">Добавить метод</button>
+</form>
+
+<h2>Все методы: </h2>
+<ul>
+  <th:block th:each="kindPayment : ${kindPayments}">
+    <li>
+      <span th:text="${kindPayment.name}"></span>
+      <form action="/kindPayment/update" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${kindPayment.id}">
+        <input type="text" name="name" th:value="${kindPayment.name}" placeholder="Наименование" required>
+        <button type="submit" formmethod="post">Обновить</button>
+      </form>
+      <form action="/kindPayment/delete" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${kindPayment.id}">
+        <button type="submit" formmethod="post">Удалить</button>
+      </form>
+    </li>
+  </th:block>
+</ul>
+</body>
+</html>

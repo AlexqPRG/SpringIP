@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Договоры</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<h1>Список договоров:</h1>
+<!-- Кнопка для открытия модального окна -->
+<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addContractModal">
+  Добавить договор
+</button>
+
+
+<div class="modal fade" id="addContractModal" tabindex="-1" role="dialog" aria-labelledby="addContractModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addContractModalLabel">Добавить договор</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-left: auto; position: absolute; right: 15px; top: 10px; width: 30px; height: 30px; background-color: red; color: white; border-radius: 50%; border: none;">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/dogovor/add" method="post" th:object="${dogovor}">
+          <div class="form-group">
+            <label for="functions">Трудовая функция</label>
+            <input type="text" class="form-control" name="functions" placeholder="Трудовая функция" th:field="*{functions}" required>
+          </div>
+          <div class="form-group">
+            <label for="dateOn">Дата принятия на работу</label>
+            <input type="date" class="form-control" name="dateOn" th:field="*{dateOn}" required>
+          </div>
+          <div class="form-group">
+            <label for="salary">Оклад</label>
+            <input type="number" class="form-control" step="0.01" name="salary" placeholder="Оклад" th:field="*{salary}" required>
+          </div>
+          <div class="form-group">
+            <label for="conditions">Условия работы</label>
+            <input type="text" class="form-control" name="conditions" placeholder="Условия работы" th:field="*{conditions}" required>
+          </div>
+          <div class="form-group">
+            <label for="operation_mode">Режим работы</label>
+            <input type="text" class="form-control" name="operation_mode" placeholder="Режим работы" th:field="*{operation_mode}" required>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="urgent" th:field="*{urgent}" id="urgent">
+            <label class="form-check-label" for="urgent">Срочный?</label>
+          </div>
+          <div class="form-group">
+            <label for="dateOff">Дата окончания договора</label>
+            <input type="date" class="form-control" name="dateOff" th:field="*{dateOff}">
+          </div>
+          <button type="submit" class="btn btn-primary">Добавить договор</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Включите необходимые скрипты для Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<h2>Все договора: </h2>
+<div class="container">
+  <div class="row">
+    <th:block th:each="dogovor : ${dogovors}">
+      <div class="col-md-3 mb-4">
+        <div class="card" style="width: 100%; min-height: 350px;">
+          <div class="card-body">
+            <h5 class="card-title">Договор #<span th:text="${dogovor.id}"></span></h5>
+            <form action="/dogovor/update" method="post">
+              <input type="hidden" name="id" th:value="${dogovor.id}">
+              <div class="mb-2">
+                <label for="functions" class="form-label">Трудовая функция</label>
+                <input type="text" name="functions" th:value="${dogovor.functions}" class="form-control" placeholder="Трудовая функция" required>
+              </div>
+              <div class="mb-2">
+                <label for="dateOn" class="form-label">Дата принятия на работу</label>
+                <input type="date" name="dateOn" th:value="${dogovor.dateOn}" class="form-control" required>
+              </div>
+              <div class="mb-2">
+                <label for="salary" class="form-label">Оклад</label>
+                <input type="number" step="0.01" name="salary" th:value="${dogovor.salary}" class="form-control" placeholder="Оклад" required>
+              </div>
+              <div class="mb-2">
+                <label for="conditions" class="form-label">Условия работы</label>
+                <input type="text" name="conditions" th:value="${dogovor.conditions}" class="form-control" placeholder="Условия работы" required>
+              </div>
+              <div class="mb-2">
+                <label for="operation_mode" class="form-label">Режим работы</label>
+                <input type="text" name="operation_mode" th:value="${dogovor.operation_mode}" class="form-control" placeholder="Режим работы" required>
+              </div>
+              <div class="mb-2">
+                <input type="checkbox" name="urgent" th:checked="${dogovor.urgent}" id="urgent">
+                <label for="urgent" class="form-check-label">Срочный?</label>
+              </div>
+              <div class="mb-2">
+                <label for="dateOff" class="form-label">Дата окончания договора</label>
+                <input type="date" name="dateOff" th:value="${dogovor.dateOff}" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 px-2">Обновить</button>
+            </form>
+            <form action="/dogovor/delete" method="post" style="margin-top: 10px;">
+              <input type="hidden" name="id" th:value="${dogovor.id}">
+              <button type="submit" class="btn btn-danger w-100 px-2">Удалить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
