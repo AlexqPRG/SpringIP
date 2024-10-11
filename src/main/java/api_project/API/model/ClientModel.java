@@ -1,5 +1,7 @@
 package api_project.API.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,28 +20,31 @@ public class ClientModel {
 
     //связь с таблицей автомобили
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<AutoModel> autoModelList;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private List<AutoModel> autos;
 
     //связь с таблицей пользователи
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private UserModel user;
 
     //связь с таблицей платежи
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<PaymentModel> payment;
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private List<PaymentModel> payments;
 
     public ClientModel(){}
 
-    public ClientModel(UUID id, String secondName, String firstName, String patronymic, String numberPhone, List<AutoModel> autoModelList, UserModel user, List<PaymentModel> payment) {
+    public ClientModel(UUID id, String secondName, String firstName, String patronymic, String numberPhone, List<AutoModel> autos, UserModel user, List<PaymentModel> payments) {
         this.id = id;
         this.secondName = secondName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         this.numberPhone = numberPhone;
-        this.autoModelList = autoModelList;
+        this.autos = autos;
         this.user = user;
-        this.payment = payment;
+        this.payments = payments;
     }
 
     public UUID getId() {
@@ -82,12 +87,12 @@ public class ClientModel {
         this.numberPhone = numberPhone;
     }
 
-    public List<AutoModel> getAutoModelList() {
-        return autoModelList;
+    public List<AutoModel> getAutos() {
+        return autos;
     }
 
-    public void setAutoModelList(List<AutoModel> autoModelList) {
-        this.autoModelList = autoModelList;
+    public void setAutos(List<AutoModel> autos) {
+        this.autos = autos;
     }
 
     public UserModel getUser() {
@@ -98,11 +103,11 @@ public class ClientModel {
         this.user = user;
     }
 
-    public List<PaymentModel> getPayment() {
-        return payment;
+    public List<PaymentModel> getPayments() {
+        return payments;
     }
 
-    public void setPayment(List<PaymentModel> payment) {
-        this.payment = payment;
+    public void setPayments(List<PaymentModel> payments) {
+        this.payments = payments;
     }
 }

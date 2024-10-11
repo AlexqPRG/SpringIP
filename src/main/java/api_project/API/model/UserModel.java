@@ -1,6 +1,8 @@
 package api_project.API.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -22,23 +24,25 @@ public class UserModel {
     private Set<RoleEnum> roles;
 
     //связь с таблицей клиенты
-    @OneToOne(optional = false, mappedBy = "user")
-    private ClientModel owner_user;
+    @OneToOne(optional = true, mappedBy = "user")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private ClientModel client;
 
     //связь с таблицей сотрудники
-    @OneToOne(optional = false, mappedBy = "user")
-    private StaffModel owner_staff;
+    @OneToOne(optional = true, mappedBy = "user")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private StaffModel staff;
 
     public UserModel(){}
 
-    public UserModel(UUID id, String username, String password, boolean isActive, Set<RoleEnum> roles, ClientModel owner_user, StaffModel owner_staff) {
+    public UserModel(UUID id, String username, String password, boolean isActive, Set<RoleEnum> roles, ClientModel client, StaffModel staff) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.isActive = isActive;
         this.roles = roles;
-        this.owner_user = owner_user;
-        this.owner_staff = owner_staff;
+        this.client = client;
+        this.staff = staff;
     }
 
     public UUID getId() {
@@ -81,19 +85,19 @@ public class UserModel {
         this.roles = roles;
     }
 
-    public ClientModel getOwner_user() {
-        return owner_user;
+    public ClientModel getClient() {
+        return client;
     }
 
-    public void setOwner_user(ClientModel owner_user) {
-        this.owner_user = owner_user;
+    public void setClient(ClientModel client) {
+        this.client = client;
     }
 
-    public StaffModel getOwner_staff() {
-        return owner_staff;
+    public StaffModel getStaff() {
+        return staff;
     }
 
-    public void setOwner_staff(StaffModel owner_staff) {
-        this.owner_staff = owner_staff;
+    public void setStaff(StaffModel staff) {
+        this.staff = staff;
     }
 }

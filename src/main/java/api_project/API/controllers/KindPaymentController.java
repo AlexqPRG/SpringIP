@@ -1,12 +1,17 @@
 package api_project.API.controllers;
 
 import api_project.API.model.KindPaymentModel;
+import api_project.API.model.StatusModel;
+import api_project.API.model.modeltDTO.ClientDTO;
+import api_project.API.model.modeltDTO.KindPaymentDTO;
+import api_project.API.model.modeltDTO.StatusDTO;
 import api_project.API.service.InMemoryKindPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/kindPayment")
@@ -19,13 +24,15 @@ public class KindPaymentController {
     }
 
     @GetMapping
-    public List<KindPaymentModel> getAllKindPayment(){
-        return kindPaymentService.findAll();
+    public List<KindPaymentDTO> getAllKindPayment(){
+        List<KindPaymentModel> kindPaymentModels = kindPaymentService.findAll();
+        return kindPaymentModels.stream().map(KindPaymentDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public KindPaymentModel getKindPaymentById(@PathVariable UUID id){
-        return kindPaymentService.findById(id);
+    public KindPaymentDTO getKindPaymentById(@PathVariable UUID id){
+        KindPaymentDTO kindPaymentDTO = new KindPaymentDTO(kindPaymentService.findById(id));
+        return kindPaymentDTO;
     }
 
     @PostMapping

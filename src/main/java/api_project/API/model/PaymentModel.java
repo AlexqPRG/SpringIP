@@ -1,5 +1,7 @@
 package api_project.API.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -16,27 +18,30 @@ public class PaymentModel {
     //связь с таблицей виды платежей
     @ManyToOne
     @JoinColumn(name = "KindPayment_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private KindPaymentModel kindPayment;
 
     //связь с таблицей клиенты
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private ClientModel client;
 
-    //связь с таблицей видами работ
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "work_id")
-    private WorkModel work;
+//    //связь с таблицей видами работ
+//    @OneToOne(optional = false, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "work_id")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    private WorkModel work;
 
     public PaymentModel(){}
 
-    public PaymentModel(UUID id, double sum, String date, KindPaymentModel kindPayment, ClientModel client, WorkModel work) {
+    public PaymentModel(UUID id, double sum, String date, KindPaymentModel kindPayment, ClientModel client) {
         this.id = id;
         this.sum = sum;
         this.date = date;
         this.kindPayment = kindPayment;
         this.client = client;
-        this.work = work;
+//        this.work = work;
     }
 
     public UUID getId() {
@@ -79,11 +84,11 @@ public class PaymentModel {
         this.client = client;
     }
 
-    public WorkModel getWork() {
-        return work;
-    }
-
-    public void setWork(WorkModel work) {
-        this.work = work;
-    }
+//    public WorkModel getWork() {
+//        return work;
+//    }
+//
+//    public void setWork(WorkModel work) {
+//        this.work = work;
+//    }
 }

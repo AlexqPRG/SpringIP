@@ -1,12 +1,14 @@
 package api_project.API.controllers;
 
 import api_project.API.model.DogovorModel;
+import api_project.API.model.modeltDTO.DogovorDTO;
 import api_project.API.service.InMemoryDogovorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/dogovor")
@@ -19,13 +21,15 @@ public class DogovorController {
     }
 
     @GetMapping
-    public List<DogovorModel> getAllDogovor(){
-        return dogovorService.findAll();
+    public List<DogovorDTO> getAllDogovor(){
+        List<DogovorModel> dogovorModels = dogovorService.findAll();
+        return dogovorModels.stream().map(DogovorDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public DogovorModel getDogovorById(@PathVariable UUID id){
-        return dogovorService.findById(id);
+    public DogovorDTO getDogovorById(@PathVariable UUID id){
+        DogovorDTO dogovorDTO = new DogovorDTO(dogovorService.findById(id));
+        return dogovorDTO;
     }
 
     @PostMapping

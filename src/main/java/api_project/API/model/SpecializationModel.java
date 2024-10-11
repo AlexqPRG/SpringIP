@@ -1,5 +1,7 @@
 package api_project.API.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,6 +19,7 @@ public class SpecializationModel {
     @JoinTable(name = "staff_specialization",
             joinColumns = @JoinColumn(name = "specialization_id"),
             inverseJoinColumns = @JoinColumn(name = "staff_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<StaffModel> staffModelList;
 
     public SpecializationModel(){}

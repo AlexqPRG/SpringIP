@@ -1,12 +1,15 @@
 package api_project.API.controllers;
 
 import api_project.API.model.PaymentModel;
+import api_project.API.model.WorkModel;
+import api_project.API.model.modeltDTO.PaymentDTO;
 import api_project.API.service.InMemoryPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/payment")
@@ -19,13 +22,15 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<PaymentModel> getAllPayment(){
-        return paymentService.findAll();
+    public List<PaymentDTO> getAllPayment(){
+        List<PaymentModel> paymentModels = paymentService.findAll();
+        return paymentModels.stream().map(PaymentDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public PaymentModel getPaymentById(@PathVariable UUID id){
-        return paymentService.findById(id);
+    public PaymentDTO getPaymentById(@PathVariable UUID id){
+        PaymentDTO paymentDTO = new PaymentDTO(paymentService.findById(id));
+        return paymentDTO;
     }
 
     @PostMapping

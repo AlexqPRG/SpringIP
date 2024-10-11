@@ -1,5 +1,7 @@
 package api_project.API.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -18,6 +20,7 @@ public class AutoModel {
     //связь с таблицей клиенты
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private ClientModel client;
 
     public AutoModel(){}

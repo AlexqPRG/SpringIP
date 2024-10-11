@@ -16,17 +16,17 @@ public class WorkModel {
     @JoinColumn(name = "staff_id")
     private StaffModel staff;
 
-    //связь с таблицей платежи
-    @OneToOne(optional = false, mappedBy = "work")
-    private PaymentModel payment;
+//    //связь с таблицей платежи
+//    @OneToOne(optional = false, mappedBy = "work")
+//    private PaymentModel payment;
 
     public WorkModel(){}
 
-    public WorkModel(UUID id, String nameOfWork, StaffModel staff, PaymentModel payment) {
+    public WorkModel(UUID id, String nameOfWork, StaffModel staff) {
         this.id = id;
         this.nameOfWork = nameOfWork;
         this.staff = staff;
-        this.payment = payment;
+//        this.payment = payment;
     }
 
     public UUID getId() {
@@ -52,12 +52,12 @@ public class WorkModel {
     public void setStaff(StaffModel staff) {
         this.staff = staff;
     }
-
-    public PaymentModel getPayment() {
-        return payment;
-    }
-
-    public void setPayment(PaymentModel payment) {
-        this.payment = payment;
-    }
+//
+//    public PaymentModel getPayment() {
+//        return payment;
+//    }
+//
+//    public void setPayment(PaymentModel payment) {
+//        this.payment = payment;
+//    }
 }

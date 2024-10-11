@@ -1,5 +1,7 @@
 package api_project.API.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -20,10 +22,12 @@ public class StaffModel {
     //связь с паспортом
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "passport_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private PassportModel passport;
 
     //связь с договором
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<DogovorModel> dogovorModelList;
 
     //связь с таблицей специализация
@@ -31,15 +35,18 @@ public class StaffModel {
     @JoinTable(name = "staff_specialization",
             joinColumns = @JoinColumn(name = "staff_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<SpecializationModel> specializationModelList;
 
     //связь с таблицей работы
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<WorkModel> workModelList;
 
     //связь с таблицей пользователи
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private UserModel user;
 
     public StaffModel(){}

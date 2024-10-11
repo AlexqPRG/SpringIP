@@ -1,12 +1,18 @@
 package api_project.API.controllers;
 
 import api_project.API.model.SpecializationModel;
+import api_project.API.model.StaffModel;
+import api_project.API.model.UserModel;
+import api_project.API.model.modeltDTO.SpecializationDTO;
+import api_project.API.model.modeltDTO.StaffDTO;
+import api_project.API.model.modeltDTO.UserDTO;
 import api_project.API.service.InMemorySpecializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/specialization")
@@ -19,13 +25,17 @@ public class SpecializationController {
     }
 
     @GetMapping
-    public List<SpecializationModel> getAllSpecialization(){
-        return specializationService.findAll();
+    public List<SpecializationDTO> getAllSpecialization(){
+        List<SpecializationModel> specializationModels = specializationService.findAll();
+        return specializationModels.stream().map(SpecializationDTO::new).collect(Collectors.toList());
+//        return specializationService.findAll();
     }
 
     @GetMapping("/{id}")
-    public SpecializationModel getSpecializationById(@PathVariable UUID id){
-        return specializationService.findById(id);
+    public SpecializationDTO getSpecializationById(@PathVariable UUID id){
+        SpecializationDTO specializationDTO = new SpecializationDTO(specializationService.findById(id));
+        return specializationDTO;
+//        return specializationService.findById(id);
     }
 
     @PostMapping

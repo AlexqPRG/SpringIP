@@ -1,8 +1,6 @@
 package api_project.API.service;
 
-import api_project.API.model.SpareModel;
 import api_project.API.model.SpecializationModel;
-import api_project.API.repository.SpareRepository;
 import api_project.API.repository.SpecializationRepository;
 import org.springframework.stereotype.Service;
 

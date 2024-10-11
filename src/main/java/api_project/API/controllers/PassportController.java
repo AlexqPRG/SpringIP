@@ -1,12 +1,16 @@
 package api_project.API.controllers;
 
+import api_project.API.model.ClientModel;
 import api_project.API.model.PassportModel;
+import api_project.API.model.modeltDTO.ClientDTO;
+import api_project.API.model.modeltDTO.PassportDTO;
 import api_project.API.service.InMemoryPassportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/api/passport")
@@ -19,8 +23,10 @@ public class PassportController {
     }
 
     @GetMapping
-    public List<PassportModel> getAllPassport(){
-        return passportService.findAll();
+    public List<PassportDTO> getAllPassport(){
+        List<PassportModel> passportModels = passportService.findAll();
+        return passportModels.stream().map(PassportDTO::new).collect(Collectors.toList());
+//        return passportService.findAll();
     }
 
     @GetMapping("/{id}")

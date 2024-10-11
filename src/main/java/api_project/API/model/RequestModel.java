@@ -1,8 +1,8 @@
 package api_project.API.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -11,5 +11,53 @@ public class RequestModel {
     @Id
     @GeneratedValue
     private UUID id;
-    //hz
+    private String description;
+    private String date;
+
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private StatusModel status;
+
+    public RequestModel(){}
+
+    public RequestModel(UUID id, String description, String date, StatusModel status) {
+        this.id = id;
+        this.description = description;
+        this.date = date;
+        this.status = status;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public StatusModel getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusModel status) {
+        this.status = status;
+    }
 }
