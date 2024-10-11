@@ -14,4 +14,6 @@ public class SpareModel {
     private UUID id;
     private String article;
     private double price;
+
+
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.web_project.zayavki.models.KindPaymentModel;
+import com.web_project.zayavki.models.StatusModel;
 import com.web_project.zayavki.service.ApiService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,64 +20,64 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/kindPayment")
-public class KindPaymentController {
+@RequestMapping("/status")
+public class StatusController {
     @Autowired
     private ApiService apiService;
 
-    private final String url = "/kindPayment";
+    private final String url = "/status";
 
     @GetMapping("/all")
-    public String getKindPayment(Model model){
+    public String getStatus(Model model){
         model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url);
 
-        ArrayList<KindPaymentModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<KindPaymentModel>>(){}.getType());
+        ArrayList<StatusModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<StatusModel>>(){}.getType());
 
-        model.addAttribute("kindPayments",list);
+        model.addAttribute("statuss",list);
 
-        model.addAttribute("kindPayment", new KindPaymentModel());
+        model.addAttribute("status", new StatusModel());
 
-        return "modelPages/kindPaymentPage";
+
+        return "modelPages/statusPage";
     }
 
     @GetMapping("/all/{id}")
-    public String getKindPaymentById(@PathVariable("id") UUID id, Model model) throws JsonProcessingException {
+    public String getStatusById(@PathVariable("id") UUID id, Model model) throws JsonProcessingException {
         model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url + "/" +  id);
-        KindPaymentModel kindPayment = new ObjectMapper().readValue(json, KindPaymentModel.class);
-        model.addAttribute("kindPayments", kindPayment);
-        model.addAttribute("kindPayment", new KindPaymentModel());
-        return "modelPages/kindPaymentPage";
+        StatusModel status = new ObjectMapper().readValue(json, StatusModel.class);
+        model.addAttribute("statuss", status);
+        model.addAttribute("status", new StatusModel());
+        return "modelPages/statusPage";
     }
 
     @PostMapping("/add")
-    public String createKindPayment(@Valid @ModelAttribute("kindPayment") KindPaymentModel kindPaymentModel, BindingResult result, Model model){
+    public String createStatus(@Valid @ModelAttribute("status") StatusModel statusModel, BindingResult result, Model model){
         model.addAttribute("userRole", getRole());
-        if(kindPaymentModel.getName() != null && kindPaymentModel.getName().length() < 3){
+        if(statusModel.getName() != null && statusModel.getName().length() < 3){
             model.addAttribute("errorMessage", "Имя должно быть не менее 3 символов");
         }
         if(result.hasErrors() || model.containsAttribute("errorMessage")){
             String json = apiService.getDataFromApi(url);
-            ArrayList<KindPaymentModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<KindPaymentModel>>(){}.getType());
-            model.addAttribute("kindPayments", list);
-            return "modelPages/kindPaymentPage";
+            ArrayList<StatusModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<StatusModel>>(){}.getType());
+            model.addAttribute("statuss", list);
+            return "modelPages/statusPage";
         }
-        String json = apiService.setDataToApi(url, kindPaymentModel);
-        return "redirect:/kindPayment/all";
+        String json = apiService.setDataToApi(url, statusModel);
+        return "redirect:/status/all";
     }
 
     @PostMapping("/update")
-    public String updateKindPayment(@Valid @ModelAttribute("kindPayment") KindPaymentModel kindPaymentModel, BindingResult result) {
-//        clientModel.setOrder(orderList);
-        String json = apiService.updateDataWithApi(url + "/" +  kindPaymentModel.getId(), kindPaymentModel);
-        return "redirect:/kindPayment/all";
+    public String updateStatus(@Valid @ModelAttribute("status") StatusModel statusModel, BindingResult result) {
+        String json = apiService.updateDataWithApi(url + "/" +  statusModel.getId(), statusModel);
+        return "redirect:/status/all";
     }
 
     @PostMapping("/delete")
-    public String deleteKindPayment(@RequestParam UUID id){
+    public String deleteStatus(@RequestParam UUID id){
         String json = apiService.deleteDataWithApi(url + "/" +  id);
-        return "redirect:/kindPayment/all";
+        return "redirect:/status/all";
     }
 
     private String getRole(){

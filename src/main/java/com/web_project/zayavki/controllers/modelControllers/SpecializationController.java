@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.web_project.zayavki.models.KindPaymentModel;
+import com.web_project.zayavki.models.SpecializationModel;
 import com.web_project.zayavki.service.ApiService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,64 +20,64 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/kindPayment")
-public class KindPaymentController {
+@RequestMapping("/specialization")
+public class SpecializationController {
     @Autowired
     private ApiService apiService;
 
-    private final String url = "/kindPayment";
+    private final String url = "/specialization";
 
     @GetMapping("/all")
-    public String getKindPayment(Model model){
+    public String getSpecialization(Model model){
         model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url);
 
-        ArrayList<KindPaymentModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<KindPaymentModel>>(){}.getType());
+        ArrayList<SpecializationModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<SpecializationModel>>(){}.getType());
 
-        model.addAttribute("kindPayments",list);
+        model.addAttribute("specializations",list);
 
-        model.addAttribute("kindPayment", new KindPaymentModel());
+        model.addAttribute("specialization", new SpecializationModel());
 
-        return "modelPages/kindPaymentPage";
+        return "modelPages/specializationPage";
     }
 
     @GetMapping("/all/{id}")
-    public String getKindPaymentById(@PathVariable("id") UUID id, Model model) throws JsonProcessingException {
+    public String getSpecializationById(@PathVariable("id") UUID id, Model model) throws JsonProcessingException {
         model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url + "/" +  id);
-        KindPaymentModel kindPayment = new ObjectMapper().readValue(json, KindPaymentModel.class);
-        model.addAttribute("kindPayments", kindPayment);
-        model.addAttribute("kindPayment", new KindPaymentModel());
-        return "modelPages/kindPaymentPage";
+        SpecializationModel specialization = new ObjectMapper().readValue(json, SpecializationModel.class);
+        model.addAttribute("specializations", specialization);
+        model.addAttribute("specialization", new SpecializationModel());
+        return "modelPages/specializationPage";
     }
 
     @PostMapping("/add")
-    public String createKindPayment(@Valid @ModelAttribute("kindPayment") KindPaymentModel kindPaymentModel, BindingResult result, Model model){
+    public String createSpecialization(@Valid @ModelAttribute("specialization") SpecializationModel specializationModel, BindingResult result, Model model){
         model.addAttribute("userRole", getRole());
-        if(kindPaymentModel.getName() != null && kindPaymentModel.getName().length() < 3){
+        if(specializationModel.getName() != null && specializationModel.getName().length() < 3){
             model.addAttribute("errorMessage", "Имя должно быть не менее 3 символов");
         }
         if(result.hasErrors() || model.containsAttribute("errorMessage")){
             String json = apiService.getDataFromApi(url);
-            ArrayList<KindPaymentModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<KindPaymentModel>>(){}.getType());
-            model.addAttribute("kindPayments", list);
-            return "modelPages/kindPaymentPage";
+            ArrayList<SpecializationModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<SpecializationModel>>(){}.getType());
+            model.addAttribute("specializations", list);
+            return "modelPages/specializationPage";
         }
-        String json = apiService.setDataToApi(url, kindPaymentModel);
-        return "redirect:/kindPayment/all";
+        String json = apiService.setDataToApi(url, specializationModel);
+        return "redirect:/specialization/all";
     }
 
     @PostMapping("/update")
-    public String updateKindPayment(@Valid @ModelAttribute("kindPayment") KindPaymentModel kindPaymentModel, BindingResult result) {
+    public String updateSpecialization(@Valid @ModelAttribute("specialization") SpecializationModel specializationModel, BindingResult result) {
 //        clientModel.setOrder(orderList);
-        String json = apiService.updateDataWithApi(url + "/" +  kindPaymentModel.getId(), kindPaymentModel);
-        return "redirect:/kindPayment/all";
+        String json = apiService.updateDataWithApi(url + "/" +  specializationModel.getId(), specializationModel);
+        return "redirect:/specialization/all";
     }
 
     @PostMapping("/delete")
-    public String deleteKindPayment(@RequestParam UUID id){
+    public String deleteSpecialization(@RequestParam UUID id){
         String json = apiService.deleteDataWithApi(url + "/" +  id);
-        return "redirect:/kindPayment/all";
+        return "redirect:/specialization/all";
     }
 
     private String getRole(){

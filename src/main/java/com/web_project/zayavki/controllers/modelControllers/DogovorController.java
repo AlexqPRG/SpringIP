@@ -5,9 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.web_project.zayavki.models.DogovorModel;
+import com.web_project.zayavki.models.StaffModel;
 import com.web_project.zayavki.service.ApiService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +30,9 @@ public class DogovorController {
 
     @GetMapping("/all")
     public String getDogovor(Model model){
+        model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url);
+        System.out.println("JSON1" + json);
 
         ArrayList<DogovorModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<DogovorModel>>(){}.getType());
 
@@ -34,13 +40,21 @@ public class DogovorController {
 
         model.addAttribute("dogovor", new DogovorModel());
 
+        json = apiService.getDataFromApi("/staff");
 
-        System.out.println(list.size());
+        System.out.println("JSON2" + json);
+
+        ArrayList<StaffModel> list_staff = new Gson().fromJson(json, new TypeToken<ArrayList<StaffModel>>(){}.getType());
+
+        model.addAttribute("staffs", list_staff);
+
+
         return "modelPages/dogovorPage";
     }
 
     @GetMapping("/all/{id}")
     public String getDogovorById(@PathVariable("id") UUID id, Model model) throws JsonProcessingException {
+        model.addAttribute("userRole", getRole());
         String json = apiService.getDataFromApi(url + "/" +  id);
         DogovorModel dogovor = new ObjectMapper().readValue(json, DogovorModel.class);
         model.addAttribute("dogovors", dogovor);
@@ -50,12 +64,20 @@ public class DogovorController {
 
     @PostMapping("/add")
     public String createDogovor(@Valid @ModelAttribute("dogovor") DogovorModel dogovorModel, BindingResult result, Model model){
-        if(result.hasErrors()){
+        model.addAttribute("userRole", getRole());
+        if(dogovorModel.getFunctions() != null && dogovorModel.getFunctions().length() < 10){
+            model.addAttribute("errorMessage", "Функция должна быть не менее 10 символов");
+        }
+        if(dogovorModel.getConditions() != null && dogovorModel.getConditions().length() < 10){
+            model.addAttribute("errorMessage", "Условия работы должны быть не менее 10 символов");
+        }
+        if(result.hasErrors() || model.containsAttribute("errorMessage")){
             String json = apiService.getDataFromApi(url);
             ArrayList<DogovorModel> list = new Gson().fromJson(json, new TypeToken<ArrayList<DogovorModel>>(){}.getType());
             model.addAttribute("dogovors", list);
             return "modelPages/dogovorPage";
         }
+        System.out.println(dogovorModel.getStaff());
         String json = apiService.setDataToApi(url, dogovorModel);
         return "redirect:/dogovor/all";
     }
@@ -72,5 +94,20 @@ public class DogovorController {
     public String deleteDogovor(@RequestParam UUID id){
         String json = apiService.deleteDataWithApi(url + "/" +  id);
         return "redirect:/dogovor/all";
+    }
+
+    private String getRole(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole = "";
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Получаем роли пользователя
+            userRole = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse(null);
+        }
+
+        return userRole;
     }
 }

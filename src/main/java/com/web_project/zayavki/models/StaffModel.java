@@ -41,4 +41,100 @@ public class StaffModel {
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserModel user;
+
+    public StaffModel(){}
+
+    public StaffModel(UUID id, String secondName, String firstName, String patronymic, String numberPhone, PassportModel passport, List<DogovorModel> dogovorModelList, List<SpecializationModel> specializationModelList, UserModel user) {
+        this.id = id;
+        this.secondName = secondName;
+        this.firstName = firstName;
+        this.patronymic = patronymic;
+        this.numberPhone = numberPhone;
+        this.passport = passport;
+        this.dogovorModelList = dogovorModelList;
+        this.specializationModelList = specializationModelList;
+//        this.workModelList = workModelList;
+        this.user = user;
+    }
+
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public String getNumberPhone() {
+        return numberPhone;
+    }
+
+    public void setNumberPhone(String numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
+    public PassportModel getPassport() {
+        return passport;
+    }
+
+    public void setPassport(PassportModel passport) {
+        this.passport = passport;
+    }
+
+    public List<DogovorModel> getDogovorModelList() {
+        return dogovorModelList;
+    }
+
+    public void setDogovorModelList(List<DogovorModel> dogovorModelList) {
+        this.dogovorModelList = dogovorModelList;
+    }
+
+    public List<SpecializationModel> getSpecializationModelList() {
+        return specializationModelList;
+    }
+
+    public void setSpecializationModelList(List<SpecializationModel> specializationModelList) {
+        this.specializationModelList = specializationModelList;
+    }
+
+    public List<WorkModel> getWorkModelList() {
+        return workModelList;
+    }
+
+    public void setWorkModelList(List<WorkModel> workModelList) {
+        this.workModelList = workModelList;
+    }
+
+    public UserModel getUser() {
+        return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
 }

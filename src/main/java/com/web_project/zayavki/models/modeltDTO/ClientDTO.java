@@ -1,46 +1,37 @@
-package com.web_project.zayavki.models;
+package com.web_project.zayavki.models.modeltDTO;
 
-import jakarta.persistence.*;
+import com.web_project.zayavki.models.AutoModel;
+import com.web_project.zayavki.models.ClientModel;
+import com.web_project.zayavki.models.PaymentModel;
 
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-public class ClientModel {
-    @Id
-    @GeneratedValue
+public class ClientDTO {
     private UUID id;
-    private String secondName; //фамилия
-    private String firstName; //имя
-    private String patronymic; //отчество
-    private String numberPhone; //номер телефона
+    private String secondName;
+    private String firstName;
+    private String patronymic;
+    private String numberPhone;
 
-
-    //связь с таблицей автомобили
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<AutoModel> autos;
-
-    //связь с таблицей пользователи
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserModel user;
-
-    //связь с таблицей платежи
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private UserDTO user;
     private List<PaymentModel> payments;
 
-    public ClientModel(){}
+    public ClientDTO(){}
 
-    public ClientModel(UUID id, String secondName, String firstName, String patronymic, String numberPhone, List<AutoModel> autos, UserModel user, List<PaymentModel> payments) {
-        this.id = id;
-        this.secondName = secondName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.numberPhone = numberPhone;
-        this.autos = autos;
-        this.user = user;
-        this.payments = payments;
+    public ClientDTO(ClientModel clientModel){
+        this.id = clientModel.getId();
+        this.secondName = clientModel.getSecondName();
+        this.firstName = clientModel.getFirstName();
+        this.patronymic = clientModel.getPatronymic();
+        this.numberPhone = clientModel.getNumberPhone();
+        this.autos = clientModel.getAutos();
+        this.user = new UserDTO(clientModel);
+        this.payments = clientModel.getPayments();
+
     }
+
 
     public UUID getId() {
         return id;
@@ -90,11 +81,11 @@ public class ClientModel {
         this.autos = autos;
     }
 
-    public UserModel getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(UserModel user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 

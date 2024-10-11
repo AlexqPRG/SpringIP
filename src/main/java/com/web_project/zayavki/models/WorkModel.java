@@ -16,8 +16,8 @@ public class WorkModel {
     @JoinColumn(name = "staff_id")
     private StaffModel staff;
 
-    //связь с таблицей платежи
-    @OneToOne(optional = false, mappedBy = "work")
-    private PaymentModel payment;
+//    //связь с таблицей платежи
+//    @OneToOne(optional = false, mappedBy = "work")
+//    private PaymentModel payment;
 
 }
