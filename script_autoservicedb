@@ -1,0 +1,681 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.4
+-- Dumped by pg_dump version 15.3
+
+-- Started on 2024-10-11 00:12:22 MSK
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 214 (class 1259 OID 19566)
+-- Name: auto_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auto_model (
+    id uuid NOT NULL,
+    brand character varying(255),
+    date_of_release character varying(255),
+    model character varying(255),
+    vin character varying(255),
+    client_id uuid
+);
+
+
+ALTER TABLE public.auto_model OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 19573)
+-- Name: client_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.client_model (
+    id uuid NOT NULL,
+    first_name character varying(255),
+    number_phone character varying(255),
+    patronymic character varying(255),
+    second_name character varying(255),
+    user_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.client_model OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 19580)
+-- Name: dogovor_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.dogovor_model (
+    id uuid NOT NULL,
+    conditions character varying(255),
+    date_off character varying(255),
+    date_on character varying(255),
+    functions character varying(255),
+    operation_mode character varying(255),
+    salary double precision NOT NULL,
+    urgent boolean NOT NULL,
+    staff_id uuid
+);
+
+
+ALTER TABLE public.dogovor_model OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 19587)
+-- Name: kind_payment_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.kind_payment_model (
+    id uuid NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.kind_payment_model OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 19592)
+-- Name: passport_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.passport_model (
+    id uuid NOT NULL,
+    code_of_subdivision character varying(255),
+    date_of_issue character varying(255),
+    name_of_subdivision character varying(255),
+    number integer NOT NULL,
+    series integer NOT NULL
+);
+
+
+ALTER TABLE public.passport_model OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 19599)
+-- Name: payment_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.payment_model (
+    id uuid NOT NULL,
+    date character varying(255),
+    sum double precision NOT NULL,
+    client_id uuid,
+    kind_payment_id uuid
+);
+
+
+ALTER TABLE public.payment_model OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 19604)
+-- Name: request_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.request_model (
+    id uuid NOT NULL,
+    date character varying(255),
+    description character varying(255),
+    status_id uuid
+);
+
+
+ALTER TABLE public.request_model OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 19611)
+-- Name: spare_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.spare_model (
+    id uuid NOT NULL,
+    article character varying(255),
+    price double precision NOT NULL
+);
+
+
+ALTER TABLE public.spare_model OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 19616)
+-- Name: specialization_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.specialization_model (
+    id uuid NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.specialization_model OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 19624)
+-- Name: staff_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.staff_model (
+    id uuid NOT NULL,
+    first_name character varying(255),
+    number_phone character varying(255),
+    patronymic character varying(255),
+    second_name character varying(255),
+    passport_id uuid NOT NULL,
+    user_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.staff_model OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 19621)
+-- Name: staff_specialization; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.staff_specialization (
+    staff_id uuid NOT NULL,
+    specialization_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.staff_specialization OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 19631)
+-- Name: status_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.status_model (
+    id uuid NOT NULL,
+    name character varying(255)
+);
+
+
+ALTER TABLE public.status_model OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 19640)
+-- Name: user_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_model (
+    id uuid NOT NULL,
+    is_active boolean NOT NULL,
+    password character varying(255),
+    username character varying(255)
+);
+
+
+ALTER TABLE public.user_model OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 19636)
+-- Name: user_role; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_role (
+    user_id uuid NOT NULL,
+    roles character varying(255),
+    CONSTRAINT user_role_roles_check CHECK (((roles)::text = ANY ((ARRAY['USER'::character varying, 'ADMIN'::character varying, 'EMPLOYEE'::character varying, 'MANAGER'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.user_role OWNER TO postgres;
+
+--
+-- TOC entry 228 (class 1259 OID 19647)
+-- Name: work_model; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.work_model (
+    id uuid NOT NULL,
+    name_of_work character varying(255),
+    staff_id uuid
+);
+
+
+ALTER TABLE public.work_model OWNER TO postgres;
+
+--
+-- TOC entry 3703 (class 0 OID 19566)
+-- Dependencies: 214
+-- Data for Name: auto_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auto_model (id, brand, date_of_release, model, vin, client_id) FROM stdin;
+cb0f9d61-793d-4177-8cda-264be7cb0637	fd	2024-10-24	fwefwwefwfwf	fwefwefwefwefwefewfwf	\N
+1d5140c8-7946-4077-acef-0246c75ca6ce	fdsfdsfsddsfd	2024-10-27	kmkjnjknjknjknjk	njknjknjknjknjknkjnjkn	\N
+\.
+
+
+--
+-- TOC entry 3704 (class 0 OID 19573)
+-- Dependencies: 215
+-- Data for Name: client_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.client_model (id, first_name, number_phone, patronymic, second_name, user_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3705 (class 0 OID 19580)
+-- Dependencies: 216
+-- Data for Name: dogovor_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.dogovor_model (id, conditions, date_off, date_on, functions, operation_mode, salary, urgent, staff_id) FROM stdin;
+98ac7e52-fb0d-46fe-a24a-5623a8be3386	fewfwefewfwefwefwfwfw		2024-10-24	fewfwefewfwefwefwfwfw1	fewfwefewfwefwefwfwfw	5555	f	d3702b4e-3c57-4705-9f8e-8133cb489c96
+f0483600-d117-4f84-a5e8-25776f4edf70	TESTFUNCTIONS1		2024-10-18	TESTFUNCTIONS1	TESTFUNCTIONS1	50000	f	d3702b4e-3c57-4705-9f8e-8133cb489c96
+\.
+
+
+--
+-- TOC entry 3706 (class 0 OID 19587)
+-- Dependencies: 217
+-- Data for Name: kind_payment_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.kind_payment_model (id, name) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3707 (class 0 OID 19592)
+-- Dependencies: 218
+-- Data for Name: passport_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.passport_model (id, code_of_subdivision, date_of_issue, name_of_subdivision, number, series) FROM stdin;
+d46317bd-b163-40c2-add9-f5c52a35b6e9	этот	отот	от	44	44
+ca57cc78-0346-48f3-9fcb-b8c3ecaebd78	jn	jn	jn	22	22
+afd5f7b3-f122-42a0-90dd-52e7cfec899a	dewlkfmweklmf	delwmflk;m	dwekl;mfweklm	225	22
+\.
+
+
+--
+-- TOC entry 3708 (class 0 OID 19599)
+-- Dependencies: 219
+-- Data for Name: payment_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.payment_model (id, date, sum, client_id, kind_payment_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3709 (class 0 OID 19604)
+-- Dependencies: 220
+-- Data for Name: request_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.request_model (id, date, description, status_id) FROM stdin;
+2ce77452-6c93-4ee8-ab23-538100344dd4	12.08.2024	DESCRIPTION	bd90a2f9-a496-4106-a8b8-6dd000f85646
+\.
+
+
+--
+-- TOC entry 3710 (class 0 OID 19611)
+-- Dependencies: 221
+-- Data for Name: spare_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.spare_model (id, article, price) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3711 (class 0 OID 19616)
+-- Dependencies: 222
+-- Data for Name: specialization_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.specialization_model (id, name) FROM stdin;
+c9a684cd-8da0-4a0f-ba2e-4bd879a08612	dasdad
+\.
+
+
+--
+-- TOC entry 3713 (class 0 OID 19624)
+-- Dependencies: 224
+-- Data for Name: staff_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.staff_model (id, first_name, number_phone, patronymic, second_name, passport_id, user_id) FROM stdin;
+d3702b4e-3c57-4705-9f8e-8133cb489c96	kwemfkwmfklm	flwekmfklwemfklwm	lkwmfklwemfklwm	fowmkfmw6	afd5f7b3-f122-42a0-90dd-52e7cfec899a	e62026fa-8827-4d5f-b539-75c6f38ecdf5
+\.
+
+
+--
+-- TOC entry 3712 (class 0 OID 19621)
+-- Dependencies: 223
+-- Data for Name: staff_specialization; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.staff_specialization (staff_id, specialization_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3714 (class 0 OID 19631)
+-- Dependencies: 225
+-- Data for Name: status_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.status_model (id, name) FROM stdin;
+2121d629-fdd8-4791-8477-343a6ffc2c15	Status1
+bd90a2f9-a496-4106-a8b8-6dd000f85646	Status2
+\.
+
+
+--
+-- TOC entry 3716 (class 0 OID 19640)
+-- Dependencies: 227
+-- Data for Name: user_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_model (id, is_active, password, username) FROM stdin;
+f9eec030-f363-46f3-8f7e-605cbf51d6a5	t	$2a$08$y4n7kA0we04SXg5W.mmM0OP1T0HEG1vHu9NDZYTfJptLG3Ntu7SQu	admin
+e62026fa-8827-4d5f-b539-75c6f38ecdf5	f	$2a$08$HpnH3fhxQxNojaNJTxPYDeTq3TnbHvndP.2cFYSrRCdYBVgLDcBou	User5
+2f1e164b-a31e-436b-b136-7677d62bbe08	t	$2a$08$7/fTq6Em5BBiC1ZP0MLP3.gjxzy111zaSsukbhi5PJiYlLckiRK2y	SASHA5
+\.
+
+
+--
+-- TOC entry 3715 (class 0 OID 19636)
+-- Dependencies: 226
+-- Data for Name: user_role; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_role (user_id, roles) FROM stdin;
+f9eec030-f363-46f3-8f7e-605cbf51d6a5	ADMIN
+e62026fa-8827-4d5f-b539-75c6f38ecdf5	USER
+f9eec030-f363-46f3-8f7e-605cbf51d6a5	USER
+f9eec030-f363-46f3-8f7e-605cbf51d6a5	EMPLOYEE
+2f1e164b-a31e-436b-b136-7677d62bbe08	USER
+\.
+
+
+--
+-- TOC entry 3717 (class 0 OID 19647)
+-- Dependencies: 228
+-- Data for Name: work_model; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.work_model (id, name_of_work, staff_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3518 (class 2606 OID 19572)
+-- Name: auto_model auto_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auto_model
+    ADD CONSTRAINT auto_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3520 (class 2606 OID 19579)
+-- Name: client_model client_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client_model
+    ADD CONSTRAINT client_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3524 (class 2606 OID 19586)
+-- Name: dogovor_model dogovor_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dogovor_model
+    ADD CONSTRAINT dogovor_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3526 (class 2606 OID 19591)
+-- Name: kind_payment_model kind_payment_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.kind_payment_model
+    ADD CONSTRAINT kind_payment_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3528 (class 2606 OID 19598)
+-- Name: passport_model passport_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.passport_model
+    ADD CONSTRAINT passport_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3530 (class 2606 OID 19603)
+-- Name: payment_model payment_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_model
+    ADD CONSTRAINT payment_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3532 (class 2606 OID 19610)
+-- Name: request_model request_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.request_model
+    ADD CONSTRAINT request_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3534 (class 2606 OID 19615)
+-- Name: spare_model spare_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.spare_model
+    ADD CONSTRAINT spare_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3536 (class 2606 OID 19620)
+-- Name: specialization_model specialization_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.specialization_model
+    ADD CONSTRAINT specialization_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3538 (class 2606 OID 19630)
+-- Name: staff_model staff_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_model
+    ADD CONSTRAINT staff_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3544 (class 2606 OID 19635)
+-- Name: status_model status_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.status_model
+    ADD CONSTRAINT status_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3540 (class 2606 OID 19657)
+-- Name: staff_model uk1fpgeqjiqitli4whpwlx05bpe; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_model
+    ADD CONSTRAINT uk1fpgeqjiqitli4whpwlx05bpe UNIQUE (user_id);
+
+
+--
+-- TOC entry 3542 (class 2606 OID 19655)
+-- Name: staff_model ukcomq763n9cxctyru89sot7o98; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_model
+    ADD CONSTRAINT ukcomq763n9cxctyru89sot7o98 UNIQUE (passport_id);
+
+
+--
+-- TOC entry 3522 (class 2606 OID 19653)
+-- Name: client_model ukqyorwegg4s06blq9ku2get06f; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client_model
+    ADD CONSTRAINT ukqyorwegg4s06blq9ku2get06f UNIQUE (user_id);
+
+
+--
+-- TOC entry 3546 (class 2606 OID 19646)
+-- Name: user_model user_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_model
+    ADD CONSTRAINT user_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3548 (class 2606 OID 19651)
+-- Name: work_model work_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.work_model
+    ADD CONSTRAINT work_model_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3557 (class 2606 OID 19703)
+-- Name: staff_model fk15qj5vfsn2umd2pj8dj0o1oun; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_model
+    ADD CONSTRAINT fk15qj5vfsn2umd2pj8dj0o1oun FOREIGN KEY (user_id) REFERENCES public.user_model(id);
+
+
+--
+-- TOC entry 3549 (class 2606 OID 19658)
+-- Name: auto_model fk5c98woho0w4cne3vythtt5uwa; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auto_model
+    ADD CONSTRAINT fk5c98woho0w4cne3vythtt5uwa FOREIGN KEY (client_id) REFERENCES public.client_model(id);
+
+
+--
+-- TOC entry 3552 (class 2606 OID 19678)
+-- Name: payment_model fk7epld468sble6p7g6wsba95ej; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_model
+    ADD CONSTRAINT fk7epld468sble6p7g6wsba95ej FOREIGN KEY (kind_payment_id) REFERENCES public.kind_payment_model(id);
+
+
+--
+-- TOC entry 3560 (class 2606 OID 19713)
+-- Name: work_model fk82h9og5mvbj6hvsqugi6fsa4f; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.work_model
+    ADD CONSTRAINT fk82h9og5mvbj6hvsqugi6fsa4f FOREIGN KEY (staff_id) REFERENCES public.staff_model(id);
+
+
+--
+-- TOC entry 3550 (class 2606 OID 19663)
+-- Name: client_model fkdtfyn9qgr45os9nrkb237qhub; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client_model
+    ADD CONSTRAINT fkdtfyn9qgr45os9nrkb237qhub FOREIGN KEY (user_id) REFERENCES public.user_model(id);
+
+
+--
+-- TOC entry 3551 (class 2606 OID 19668)
+-- Name: dogovor_model fke1go5owxh936hev30hmjdd409; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dogovor_model
+    ADD CONSTRAINT fke1go5owxh936hev30hmjdd409 FOREIGN KEY (staff_id) REFERENCES public.staff_model(id);
+
+
+--
+-- TOC entry 3553 (class 2606 OID 19673)
+-- Name: payment_model fkfdgwf95p59fqq9hdbsrjij0s6; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payment_model
+    ADD CONSTRAINT fkfdgwf95p59fqq9hdbsrjij0s6 FOREIGN KEY (client_id) REFERENCES public.client_model(id);
+
+
+--
+-- TOC entry 3554 (class 2606 OID 19683)
+-- Name: request_model fkg6hqipng8q4f0vi2ics9goy5l; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.request_model
+    ADD CONSTRAINT fkg6hqipng8q4f0vi2ics9goy5l FOREIGN KEY (status_id) REFERENCES public.status_model(id);
+
+
+--
+-- TOC entry 3558 (class 2606 OID 19698)
+-- Name: staff_model fkgv4f53f6wfh8402pqrp4huv39; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_model
+    ADD CONSTRAINT fkgv4f53f6wfh8402pqrp4huv39 FOREIGN KEY (passport_id) REFERENCES public.passport_model(id);
+
+
+--
+-- TOC entry 3555 (class 2606 OID 19688)
+-- Name: staff_specialization fkofp18ef9pcdyyddxdqxevqd70; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_specialization
+    ADD CONSTRAINT fkofp18ef9pcdyyddxdqxevqd70 FOREIGN KEY (specialization_id) REFERENCES public.specialization_model(id);
+
+
+--
+-- TOC entry 3559 (class 2606 OID 19708)
+-- Name: user_role fkryojaj4bpgbcrlxbtdbejvwn; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_role
+    ADD CONSTRAINT fkryojaj4bpgbcrlxbtdbejvwn FOREIGN KEY (user_id) REFERENCES public.user_model(id);
+
+
+--
+-- TOC entry 3556 (class 2606 OID 19693)
+-- Name: staff_specialization fktomfpnk2q33vk9w0mcfhtlcgb; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.staff_specialization
+    ADD CONSTRAINT fktomfpnk2q33vk9w0mcfhtlcgb FOREIGN KEY (staff_id) REFERENCES public.staff_model(id);
+
+
+-- Completed on 2024-10-11 00:12:23 MSK
+
+--
+-- PostgreSQL database dump complete
+--
+
